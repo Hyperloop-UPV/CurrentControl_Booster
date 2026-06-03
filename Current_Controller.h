@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'Current_Controller'.
 //
-// Model version                  : 1.19
+// Model version                  : 1.21
 // Simulink Coder version         : 25.2 (R2025b) 28-Jul-2025
-// C/C++ source code generated on : Wed Jun  3 13:06:34 2026
+// C/C++ source code generated on : Wed Jun  3 21:37:05 2026
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: STMicroelectronics->ST10/Super10
@@ -26,8 +26,8 @@
 
 // Block signals and states (default storage) for system '<Root>'
 struct DW {
-  double Integrator_DSTATE;            // '<S44>/Integrator'
-  double Integrator_DSTATE_i;          // '<S97>/Integrator'
+  float Integrator_DSTATE;             // '<S44>/Integrator'
+  float Integrator_DSTATE_i;           // '<S97>/Integrator'
 };
 
 // Class declaration for model Current_Controller
@@ -51,10 +51,10 @@ class Current_Controller final
   static void initialize();
 
   // model step function
-  void step(double arg_Iabc[3], double arg_Init_Angle, double arg_Iq_ref, double
-            arg_pos_speetec, double arg_Vabc[3], double &arg_ELE_angle, double
-            &arg_Vd, double &arg_Vq, double &arg_Iq_error, double &arg_Id_error,
-            double &arg_Iq_measured, double &arg_Id_measured);
+  void step(float arg_Iabc[3], float arg_Init_Angle, float arg_Iq_ref, float
+            arg_pos_speetec, float arg_Vabc[3], float &arg_ELE_angle, float
+            &arg_Vd, float &arg_Vq, float &arg_Iq_error, float &arg_Id_error,
+            float &arg_Iq_measured, float &arg_Id_measured);
 
   // model terminate function
   static void terminate();
@@ -76,6 +76,7 @@ class Current_Controller final
 //
 //  Block '<S2>/Scope' : Unused code path elimination
 //  Block '<S3>/Scope' : Unused code path elimination
+//  Block '<S4>/Cast' : Unused code path elimination
 //  Block '<S4>/Scope' : Unused code path elimination
 //  Block '<S5>/Scope' : Unused code path elimination
 //  Block '<S5>/Scope1' : Unused code path elimination
@@ -91,6 +92,7 @@ class Current_Controller final
 //  Block '<Root>/Scope9' : Unused code path elimination
 //  Block '<S6>/Scope' : Unused code path elimination
 //  Block '<S6>/Scope1' : Unused code path elimination
+//  Block '<S3>/Cast' : Eliminate redundant data type conversion
 
 
 //-
