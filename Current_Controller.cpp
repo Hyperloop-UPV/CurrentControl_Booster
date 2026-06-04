@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'Current_Controller'.
 //
-// Model version                  : 1.21
+// Model version                  : 1.26
 // Simulink Coder version         : 25.2 (R2025b) 28-Jul-2025
-// C/C++ source code generated on : Wed Jun  3 21:37:05 2026
+// C/C++ source code generated on : Thu Jun  4 14:08:34 2026
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: STMicroelectronics->ST10/Super10
@@ -19,8 +19,8 @@
 // Validation result: Not run
 //
 #include "Current_Controller.h"
-#include <array>
 #include <cmath>
+#include <array>
 #include <stdint.h>
 #include <cfloat>
 #include <stdbool.h>
@@ -57,10 +57,11 @@ double rt_modd(double u0, double u1)
 }
 
 // Model step function
-void Current_Controller::step(float arg_Iabc[3], float arg_Init_Angle, float
-  arg_Iq_ref, float arg_pos_speetec, float arg_Vabc[3], float &arg_ELE_angle,
-  float &arg_Vd, float &arg_Vq, float &arg_Iq_error, float &arg_Id_error, float
-  &arg_Iq_measured, float &arg_Id_measured)
+void Current_Controller::step(float arg_Ia, float arg_Ib, float arg_Ic, float
+  arg_Iq_ref, float arg_Init_Angle, float arg_pos_speetec, float *arg_Va, float *
+  arg_Vb, float *arg_Vc, float *arg_ELE_angle, float *arg_Vd, float *arg_Vq,
+  float *arg_Iq_error, float *arg_Id_error, float &arg_Iq_measured, float
+  &arg_Id_measured)
 {
   std::array<float, 3> rtb_Sum_n_0;
   std::array<float, 9> rtb_dq0_tmp_1;
@@ -71,7 +72,6 @@ void Current_Controller::step(float arg_Iabc[3], float arg_Init_Angle, float
   float b_idx_2;
   float rtb_dq0_tmp;
   float rtb_dq0_tmp_0;
-  float rtb_dq0_tmp_idx_2;
   float tmp;
   int16_t b_idx_2_tmp;
   int16_t i;
@@ -107,7 +107,14 @@ void Current_Controller::step(float arg_Iabc[3], float arg_Init_Angle, float
   rtb_dq0_tmp = std::cos(static_cast<float>(rtb_MathFunction));
   rtb_dq0_tmp_0 = std::sin(static_cast<float>(rtb_MathFunction));
 
-  // MATLAB Function: '<S1>/Clarke Transform'
+  // MATLAB Function: '<S1>/Clarke Transform' incorporates:
+  //   Inport: '<Root>/Ia'
+  //   Inport: '<Root>/Ib'
+  //   Inport: '<Root>/Ic'
+
+  rtb_Sum_n_0[0] = arg_Ia;
+  rtb_Sum_n_0[1] = arg_Ib;
+  rtb_Sum_n_0[2] = arg_Ic;
   Integrator = 0.0F;
   b_idx_1 = 0.0F;
   b_idx_2 = 0.0F;
@@ -121,10 +128,9 @@ void Current_Controller::step(float arg_Iabc[3], float arg_Init_Angle, float
   rtb_dq0_tmp_1[7] = 0.0F;
   for (i = 0; i < 3; i++) {
     // MATLAB Function: '<S1>/Clarke Transform' incorporates:
-    //   Inport: '<Root>/Iabc'
     //   MATLAB Function: '<S1>/Clarke to Park Angle Transform'
 
-    tmp = arg_Iabc[i];
+    tmp = rtb_Sum_n_0[i];
     Integrator += b[3 * i] * tmp;
     b_idx_1 += b[3 * i + 1] * tmp;
     b_idx_2_tmp = 3 * i + 2;
@@ -173,18 +179,18 @@ void Current_Controller::step(float arg_Iabc[3], float arg_Init_Angle, float
   //   MATLAB Function: '<S1>/Clarke to Park Angle Transform'
   //   Sum: '<Root>/Sum2'
 
-  arg_Vd = (0.0F - arg_Id_measured) * 10.5746059F + Integrator;
+  *arg_Vd = (0.0F - arg_Id_measured) * 10.5746059F + Integrator;
 
   // Sum: '<Root>/Sum1' incorporates:
   //   Inport: '<Root>/Iq_ref'
   //   MATLAB Function: '<S1>/Clarke to Park Angle Transform'
 
-  arg_Iq_error = arg_Iq_ref - arg_Iq_measured;
+  *arg_Iq_error = arg_Iq_ref - arg_Iq_measured;
 
   // DiscreteIntegrator: '<S97>/Integrator' incorporates:
   //   Gain: '<S94>/Integral Gain'
 
-  b_idx_1 = 1486.2207F * arg_Iq_error * 0.0001F;
+  b_idx_1 = 1486.2207F * *arg_Iq_error * 0.0001F;
 
   // DiscreteIntegrator: '<S97>/Integrator'
   Integrator_p = b_idx_1 + rtDW.Integrator_DSTATE_i;
@@ -193,12 +199,11 @@ void Current_Controller::step(float arg_Iabc[3], float arg_Init_Angle, float
   //   Gain: '<S102>/Proportional Gain'
   //   Sum: '<S106>/Sum'
 
-  arg_Vq = std::fmax(12.1385422F * arg_Iq_error + Integrator_p, 0.0F);
+  *arg_Vq = std::fmax(12.1385422F * *arg_Iq_error + Integrator_p, 0.0F);
 
   // MATLAB Function: '<S5>/Inverse Park Transform' incorporates:
   //   Constant: '<S5>/Constant'
   //   DataTypeConversion: '<S6>/Cast'
-  //   Math: '<S6>/Math Function'
   //   SignalConversion generated from: '<S115>/ SFunction '
 
   rtb_dq0_tmp_1[0] = rtb_dq0_tmp_0;
@@ -210,37 +215,30 @@ void Current_Controller::step(float arg_Iabc[3], float arg_Init_Angle, float
   rtb_dq0_tmp_1[2] = std::sin(static_cast<float>(rtb_MathFunction) + 2.09439516F);
   rtb_dq0_tmp_1[5] = std::cos(static_cast<float>(rtb_MathFunction) + 2.09439516F);
   rtb_dq0_tmp_1[8] = 1.0F;
-  rtb_Sum_n_0[0] = arg_Vd;
-  rtb_Sum_n_0[1] = arg_Vq;
+  rtb_Sum_n_0[0] = *arg_Vd;
+  rtb_Sum_n_0[1] = *arg_Vq;
   rtb_Sum_n_0[2] = 0.0F;
-  rtb_dq0_tmp = 0.0F;
-  rtb_dq0_tmp_0 = 0.0F;
-  rtb_dq0_tmp_idx_2 = 0.0F;
+  *arg_Va = 0.0F;
+  *arg_Vb = 0.0F;
+  *arg_Vc = 0.0F;
   for (i = 0; i < 3; i++) {
     tmp = rtb_Sum_n_0[i];
-    rtb_dq0_tmp += rtb_dq0_tmp_1[3 * i] * tmp;
-    rtb_dq0_tmp_0 += rtb_dq0_tmp_1[3 * i + 1] * tmp;
-    rtb_dq0_tmp_idx_2 += rtb_dq0_tmp_1[3 * i + 2] * tmp;
+    *arg_Va += rtb_dq0_tmp_1[3 * i] * tmp;
+    *arg_Vb += rtb_dq0_tmp_1[3 * i + 1] * tmp;
+    *arg_Vc += rtb_dq0_tmp_1[3 * i + 2] * tmp;
   }
-
-  // Outport: '<Root>/Vabc' incorporates:
-  //   MATLAB Function: '<S5>/Inverse Park Transform'
-
-  arg_Vabc[0] = rtb_dq0_tmp;
-  arg_Vabc[1] = rtb_dq0_tmp_0;
-  arg_Vabc[2] = rtb_dq0_tmp_idx_2;
 
   // Outport: '<Root>/Id_error' incorporates:
   //   Constant: '<Root>/Constant'
   //   MATLAB Function: '<S1>/Clarke to Park Angle Transform'
   //   Sum: '<Root>/Sum2'
 
-  arg_Id_error = 0.0F - arg_Id_measured;
+  *arg_Id_error = 0.0F - arg_Id_measured;
 
   // Outport: '<Root>/ELE angle' incorporates:
   //   DataTypeConversion: '<S6>/Cast'
 
-  arg_ELE_angle = static_cast<float>(rtb_MathFunction);
+  *arg_ELE_angle = static_cast<float>(rtb_MathFunction);
 
   // Update for DiscreteIntegrator: '<S44>/Integrator'
   rtDW.Integrator_DSTATE = b_idx_2 + Integrator;

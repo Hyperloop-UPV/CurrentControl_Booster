@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'Current_Controller'.
 //
-// Model version                  : 1.21
+// Model version                  : 1.26
 // Simulink Coder version         : 25.2 (R2025b) 28-Jul-2025
-// C/C++ source code generated on : Wed Jun  3 21:37:05 2026
+// C/C++ source code generated on : Thu Jun  4 14:08:34 2026
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: STMicroelectronics->ST10/Super10
@@ -22,7 +22,6 @@
 #define Current_Controller_h_
 #include <stdbool.h>
 #include <stdint.h>
-#include <array>
 
 // Block signals and states (default storage) for system '<Root>'
 struct DW {
@@ -51,10 +50,11 @@ class Current_Controller final
   static void initialize();
 
   // model step function
-  void step(float arg_Iabc[3], float arg_Init_Angle, float arg_Iq_ref, float
-            arg_pos_speetec, float arg_Vabc[3], float &arg_ELE_angle, float
-            &arg_Vd, float &arg_Vq, float &arg_Iq_error, float &arg_Id_error,
-            float &arg_Iq_measured, float &arg_Id_measured);
+  void step(float arg_Ia, float arg_Ib, float arg_Ic, float arg_Iq_ref, float
+            arg_Init_Angle, float arg_pos_speetec, float *arg_Va, float *arg_Vb,
+            float *arg_Vc, float *arg_ELE_angle, float *arg_Vd, float *arg_Vq,
+            float *arg_Iq_error, float *arg_Id_error, float &arg_Iq_measured,
+            float &arg_Id_measured);
 
   // model terminate function
   static void terminate();
