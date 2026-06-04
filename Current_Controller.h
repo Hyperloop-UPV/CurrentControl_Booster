@@ -9,7 +9,7 @@
 //
 // Model version                  : 1.26
 // Simulink Coder version         : 25.2 (R2025b) 28-Jul-2025
-// C/C++ source code generated on : Thu Jun  4 16:34:26 2026
+// C/C++ source code generated on : Thu Jun  4 16:49:08 2026
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: STMicroelectronics->ST10/Super10
@@ -52,7 +52,7 @@ class Current_Controller final
   // model step function
   void step(float arg_Ia, float arg_Ib, float arg_Ic, float arg_Iq_ref, float
             arg_Init_Angle, float arg_pos_speetec, float &arg_Va, float &arg_Vb,
-            float &arg_Vc, float &arg_ELE_angle, float &arg_Vd, float &arg_Vq,
+            float &arg_Vc, float &arg_ELE_angle, float &arg_Vq, float &arg_Vd,
             float &arg_Iq_error, float &arg_Id_error, float &arg_Iq_measured,
             float &arg_Id_measured);
 
