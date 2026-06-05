@@ -9,7 +9,7 @@
 //
 // Model version                  : 1.33
 // Simulink Coder version         : 25.2 (R2025b) 28-Jul-2025
-// C/C++ source code generated on : Fri Jun  5 16:11:01 2026
+// C/C++ source code generated on : Fri Jun  5 16:25:34 2026
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: STMicroelectronics->ST10/Super10
@@ -59,8 +59,8 @@ namespace MATLAB
 {
   // Model step function
   void CurrentControl::step(float arg_Ia, float arg_Ib, float arg_Ic, float
-    arg_Iq_ref, float arg_Init_Angle, float arg_pos_speetec, double &arg_Va,
-    double &arg_Vb, double &arg_Vc, float &arg_ELE_angle, float &arg_Vq, float
+    arg_Iq_ref, float arg_Init_Angle, float arg_pos_speetec, float &arg_Va,
+    float &arg_Vb, float &arg_Vc, float &arg_ELE_angle, float &arg_Vq, float
     &arg_Vd, float &arg_Iq_error, float &arg_Id_error, float &arg_Iq_measured,
     float &arg_Id_measured)
   {
@@ -74,7 +74,7 @@ namespace MATLAB
     float b_idx_2;
     float rtb_dq0_tmp;
     float rtb_dq0_tmp_0;
-    float rtb_dq0_tmp_idx_2;
+    float rtb_dq0_tmp_idx_0;
     float tmp;
     int16_t b_idx_2_tmp;
     int16_t i;
@@ -229,14 +229,14 @@ namespace MATLAB
     rtb_Sum_n_0[2] = 0.0F;
 
     // MATLAB Function: '<S5>/Inverse Park Transform'
-    rtb_dq0_tmp = 0.0F;
+    rtb_dq0_tmp_idx_0 = 0.0F;
     rtb_dq0_tmp_0 = 0.0F;
-    rtb_dq0_tmp_idx_2 = 0.0F;
+    rtb_dq0_tmp = 0.0F;
     for (i = 0; i < 3; i++) {
       tmp = rtb_Sum_n_0[i];
-      rtb_dq0_tmp += rtb_dq0_tmp_1[3 * i] * tmp;
+      rtb_dq0_tmp_idx_0 += rtb_dq0_tmp_1[3 * i] * tmp;
       rtb_dq0_tmp_0 += rtb_dq0_tmp_1[3 * i + 1] * tmp;
-      rtb_dq0_tmp_idx_2 += rtb_dq0_tmp_1[3 * i + 2] * tmp;
+      rtb_dq0_tmp += rtb_dq0_tmp_1[3 * i + 2] * tmp;
     }
 
     // Product: '<S6>/Divide' incorporates:
@@ -246,27 +246,30 @@ namespace MATLAB
     //   MinMax: '<S6>/Min1'
     //   Sum: '<S6>/Sum'
 
-    rtb_Divide = (std::fmax(std::fmax(rtb_dq0_tmp, rtb_dq0_tmp_0),
-      rtb_dq0_tmp_idx_2) + std::fmin(std::fmin(rtb_dq0_tmp, rtb_dq0_tmp_0),
-      rtb_dq0_tmp_idx_2)) / 2.0;
+    rtb_Divide = (std::fmax(std::fmax(rtb_dq0_tmp_idx_0, rtb_dq0_tmp_0),
+      rtb_dq0_tmp) + std::fmin(std::fmin(rtb_dq0_tmp_idx_0, rtb_dq0_tmp_0),
+      rtb_dq0_tmp)) / 2.0;
 
     // Outport: '<Root>/Va' incorporates:
+    //   DataTypeConversion: '<Root>/Cast'
     //   MATLAB Function: '<S5>/Inverse Park Transform'
     //   Sum: '<S6>/Sum1'
 
-    arg_Va = rtb_dq0_tmp - rtb_Divide;
+    arg_Va = static_cast<float>(rtb_dq0_tmp_idx_0 - rtb_Divide);
 
     // Outport: '<Root>/Vb' incorporates:
+    //   DataTypeConversion: '<Root>/Cast'
     //   MATLAB Function: '<S5>/Inverse Park Transform'
     //   Sum: '<S6>/Sum1'
 
-    arg_Vb = rtb_dq0_tmp_0 - rtb_Divide;
+    arg_Vb = static_cast<float>(rtb_dq0_tmp_0 - rtb_Divide);
 
     // Outport: '<Root>/Vc' incorporates:
+    //   DataTypeConversion: '<Root>/Cast'
     //   MATLAB Function: '<S5>/Inverse Park Transform'
     //   Sum: '<S6>/Sum1'
 
-    arg_Vc = rtb_dq0_tmp_idx_2 - rtb_Divide;
+    arg_Vc = static_cast<float>(rtb_dq0_tmp - rtb_Divide);
 
     // Outport: '<Root>/Id_error' incorporates:
     //   Constant: '<Root>/Constant'
